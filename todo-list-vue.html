@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -24,15 +23,21 @@
     <div>
       <input type="text" v-model="message">
       <button @click="addMessage">Agregar</button>
+      <button @click="removeAll">clear</button>
     </div>
 
     <h1 v-if="awesome">Vue is awesome!</h1>
     <h6 v-else>Oh no 😢</h6>
     messages
-    <div v-for="(messageItem, i) in messages" :key="i" >
-      {{messageItem}}
-      <button @click="addMessage">editar</button>
-      <button @click="addMessage">eliminar</button>
+    <div v-for="(messageItem, index) in messages" :key="index" >
+      <span v-if="itemIndexediting !== index">{{messageItem}}</span>
+      <template v-else> 
+        <input  v-model="messageItem" type="text">
+        <button @click="updateMessage (messageItem, index)">Actualizar</button>
+      </template>
+      
+      <button @click="editMessage(messageItem, index)">editar</button>
+      <button @click="removeMessage(messageItem, index)">eliminar</button>
     </div>
 
   </div>
@@ -47,7 +52,8 @@
     data: {
       message: 'Hello Vue!',
       awesome: false,
-      messages: []
+      messages: [],
+      itemIndexediting: -1,
     },
 
     watch: {
@@ -63,7 +69,21 @@
           this.messages.push(this.message)
         }
         console.log(this.messages)
-      }
+      },
+      removeMessage(messageItem, index){
+        this.messages.splice(index,1)
+      },
+      removeAll(){
+        this.messages = []
+      },
+      editMessage(messageItem, index){
+        this.itemIndexediting= index
+       // this.messages[index]=messageItem
+      },
+      updateMessage(messageItem, index){
+        this.itemIndexediting= -1
+        this.messages[index]=messageItem
+      },
     },
   })
 </script>
